@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="ScheduX is a personal event calendar for planning better and staying organized."
+    />
+    <meta name="calendarific-api-key" content="mWnwcOUhZniDWuM6AxyzWZ4wC8hCkh3x" />
+    <title>ScheduX — Plan Better. Stay Organized.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/calendar.css" />
+    <link rel="stylesheet" href="css/sidebar.css" />
+    <link rel="stylesheet" href="css/modal.css" />
+    <link rel="stylesheet" href="css/toast.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#calendar">Skip to calendar</a>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="#calendar" aria-label="ScheduX home">
+          <span class="brand-mark"><i class="fa-solid fa-calendar-days"></i></span>
+          <span>Schedu<span>X</span></span>
+        </a>
+
+        <div class="topbar-actions">
+          <label class="search-field" for="event-search">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <span class="sr-only">Search events</span>
+            <input id="event-search" data-event-search type="search" placeholder="Search events" autocomplete="off" />
+          </label>
+          <button class="icon-button theme-toggle" data-theme-toggle type="button" aria-label="Switch to dark theme">
+            <i class="fa-regular fa-moon" aria-hidden="true"></i>
+          </button>
+          <button class="primary-button add-event-button" type="button">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            <span>Add event</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="dashboard">
+        <section class="calendar-panel" id="calendar" aria-labelledby="calendar-heading">
+          <div class="calendar-toolbar">
+            <div>
+              <p class="eyebrow">Your schedule</p>
+              <h1 id="calendar-heading" aria-live="polite" aria-atomic="true">Calendar</h1>
+            </div>
+            <div class="calendar-controls" role="group" aria-label="Calendar navigation">
+              <button class="outline-button today-button" type="button" data-calendar-action="today">Today</button>
+              <button class="icon-button" type="button" data-calendar-action="previous" aria-label="Previous month">
+                <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+              </button>
+              <button class="icon-button" type="button" data-calendar-action="next" aria-label="Next month">
+                <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="calendar-body">
+            <div class="calendar-grid" data-calendar-grid aria-label="Calendar"></div>
+            <div class="calendar-loading" data-calendar-loading role="status" hidden>
+              <span class="loading-spinner" aria-hidden="true"></span>
+              <span>Loading public holidays…</span>
+            </div>
+          </div>
+          <p class="calendar-error" data-calendar-error role="alert" hidden></p>
+          <p class="calendar-attribution">Public holiday data by <a href="https://calendarific.com/" target="_blank" rel="noreferrer">Calendarific</a></p>
+        </section>
+
+        <aside class="sidebar" aria-label="Schedule overview">
+          <section class="sidebar-card today-card">
+            <div class="card-heading"><div><p class="eyebrow">Your schedule</p><h2>Today</h2></div><span class="date-badge" data-today-date>—</span></div>
+            <div data-today-events></div>
+          </section>
+
+          <section class="sidebar-card">
+            <div class="card-heading"><div><h2>Upcoming</h2><p>Stay ahead of your week</p></div></div>
+            <div data-upcoming-events></div>
+          </section>
+
+          <section class="sidebar-card filters-card">
+            <div class="card-heading"><div><h2>Categories</h2><p>Filter your calendar</p></div></div>
+            <div class="filter-list" data-category-filters></div>
+          </section>
+
+          <section class="sidebar-card announcement-card">
+            <div class="card-heading"><div><p class="eyebrow">Planning notes</p><h2>Announcements</h2></div><i class="fa-solid fa-sparkles" aria-hidden="true"></i></div>
+            <div data-announcements aria-live="polite"></div>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" data-event-modal-backdrop aria-hidden="true"></div>
+    <section class="event-modal" id="event-modal" role="dialog" aria-modal="true" aria-labelledby="event-modal-title" hidden>
+      <div class="modal-heading">
+        <div>
+          <p class="eyebrow">Plan your time</p>
+          <h2 id="event-modal-title">Add event</h2>
+        </div>
+        <button class="icon-button" type="button" data-modal-close aria-label="Close event form">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+      <form id="event-form" novalidate>
+        <p class="form-error" id="event-form-error" role="alert" hidden></p>
+        <div class="form-field form-field-wide">
+          <label for="event-title">Title <span aria-hidden="true">*</span></label>
+          <input id="event-title" name="title" type="text" maxlength="80" required autocomplete="off" />
+        </div>
+        <div class="form-field form-field-wide">
+          <label for="event-description">Description</label>
+          <textarea id="event-description" name="description" rows="3" maxlength="500"></textarea>
+        </div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="event-date">Date <span aria-hidden="true">*</span></label>
+            <input id="event-date" name="date" type="date" required />
+          </div>
+          <div class="form-field">
+            <label for="event-time">Time</label>
+            <input id="event-time" name="time" type="time" />
+          </div>
+          <div class="form-field">
+            <label for="event-category">Category <span aria-hidden="true">*</span></label>
+            <select id="event-category" name="category" required>
+              <option value="Study">Study</option>
+              <option value="Work">Work</option>
+              <option value="Personal">Personal</option>
+              <option value="Holiday">Holiday</option>
+              <option value="Birthday">Birthday</option>
+              <option value="Meeting">Meeting</option>
+              <option value="Health">Health</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="event-color">Colour</label>
+            <input id="event-color" name="color" type="color" value="#5e9bea" />
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="danger-button" type="button" data-delete-event hidden>Delete</button>
+          <div class="modal-actions-end">
+            <button class="outline-button" type="button" data-modal-close>Cancel</button>
+            <button class="primary-button" type="submit">Save event</button>
+          </div>
+        </div>
+      </form>
+    </section>
+    <div class="toast-region" aria-live="polite" aria-atomic="true"></div>
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>

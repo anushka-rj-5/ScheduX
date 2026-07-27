@@ -1,0 +1,19 @@
+.filters-card { padding-bottom: 1rem; }
+.sidebar-event { width: 100%; display: flex; align-items: center; gap: .7rem; padding: .68rem 0; color: var(--text); background: transparent; border: 0; border-bottom: 1px solid var(--border); text-align: left; }
+.sidebar-event:last-child { border-bottom: 0; padding-bottom: 0; }
+.sidebar-event:hover strong { color: var(--primary); }
+.sidebar-event-date { display: grid; width: 38px; height: 36px; place-items: center; color: var(--event-color, var(--primary)); background: color-mix(in srgb, var(--event-color, var(--primary)) 14%, transparent); border-radius: 8px; font-size: .61rem; font-weight: 800; line-height: 1.1; text-align: center; }
+.sidebar-event strong, 
+.announcement-item strong { display: block; font-size: .75rem; }
+.sidebar-event small { display: block; margin-top: .18rem; color: var(--muted); font-size: .66rem; }
+.announcement-item { padding: .8rem 0; border-bottom: 1px solid rgba(97, 86, 217, .16); }
+.announcement-item:last-child { padding-bottom: 0; border-bottom: 0; }
+.announcement-item strong { text-transform: capitalize; }
+.announcement-item p { margin: .3rem 0 0; color: var(--muted); font-size: .68rem; line-height: 1.5; }
+.announcement-skeleton { height: 54px; margin-top: .75rem; background: linear-gradient(90deg, #ecebfa 25%, #f7f6ff 37%, #ecebfa 63%); background-size: 400% 100%; border-radius: 8px; animation: shimmer 1.2s ease infinite; }
+
+:root[data-theme="dark"] 
+.sidebar-event-date { background: color-mix(in srgb, var(--event-color, var(--primary)) 22%, transparent); }
+.announcement-card .empty-copy { margin-bottom: 0; }
+
+@keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }

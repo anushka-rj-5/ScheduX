@@ -1,0 +1,73 @@
+.modal-backdrop { 
+  position: fixed; z-index: 30; inset: 0; 
+  visibility: hidden; opacity: 0; 
+  background: rgba(24, 28, 45, .45); 
+  transition: opacity .2s ease, visibility .2s ease; }
+.modal-backdrop.is-visible { 
+  visibility: visible; opacity: 1; }
+.event-modal { 
+  position: fixed; 
+  z-index: 31; top: 50%; 
+  left: 50%; width: min(560px, calc(100% - 2rem)); 
+  max-height: calc(100vh - 2rem); padding: clamp(1.25rem, 4vw, 1.8rem); 
+  overflow-y: auto; color: var(--text); background: var(--surface); 
+  border-radius: var(--radius); box-shadow: 0 25px 70px rgba(19, 23, 43, .24); 
+  transform: translate(-50%, -50%); }
+.event-modal[hidden] { 
+  display: none; }
+.modal-heading { 
+  display: flex; 
+  align-items: flex-start; 
+  justify-content: space-between; 
+  gap: 1rem; margin-bottom: 1.25rem; }
+.modal-heading h2 { 
+  font-size: 1.25rem; }
+.form-error { 
+  margin: 0 0 1rem; 
+  padding: .65rem .75rem; 
+  color: #a53f42; background: #fff0f0; 
+  border-radius: 8px; 
+  font-size: .78rem; 
+  line-height: 1.45; }
+.form-field { 
+  display: grid; 
+  gap: .38rem; }
+.form-field label { 
+  color: #4e566b; 
+  font-size: .73rem; font-weight: 700; }
+.form-field input, 
+.form-field textarea, 
+.form-field select { 
+  width: 100%; 
+  padding: .66rem .72rem; 
+  color: var(--text); 
+  background: #fff; 
+  border: 1px solid #dfe2eb; 
+  border-radius: 9px; 
+  outline: 0; font: 
+  inherit; font-size: .8rem; }
+.form-field textarea { resize: vertical; }
+.form-field input:focus, 
+.form-field textarea:focus, 
+.form-field select:focus { 
+  border-color: #9891ef; 
+  box-shadow: 0 0 0 3px #eeedff; }
+.form-field input[type="color"] { 
+  min-height: 38px; padding: .2rem; 
+  cursor: pointer; }.form-field-wide { margin-bottom: .9rem; }
+.form-grid { 
+  display: grid; 
+  grid-template-columns: repeat(2, minmax(0, 1fr)); 
+  gap: .85rem; }
+.modal-actions { display: flex; 
+  align-items: center; 
+  justify-content: space-between; gap: 1rem; margin-top: 1.5rem; }
+.modal-actions-end { display: flex; gap: .55rem; }
+.danger-button { padding: .64rem .8rem; 
+  color: #b44e52; 
+  background: #fff0f0; 
+  border: 1px solid #ffd9d9; 
+  border-radius: 9px; 
+  font-weight: 700; font-size: .75rem; }
+.danger-button:hover { background: #ffe4e4; }
+.modal-open { overflow: hidden; }

@@ -1,0 +1,43 @@
+@media (max-width: 1050px) { 
+  .dashboard { 
+    grid-template-columns: minmax(0, 1fr) 285px; 
+    padding-inline: 1.5rem; } }
+@media (max-width: 850px) { 
+  .dashboard { grid-template-columns: 1fr; }
+  .sidebar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .announcement-card { grid-column: span 2; }
+  .today-card { grid-row: span 2; }
+  .topbar { padding-inline: 1.5rem; } }
+@media (max-width: 620px) { 
+  .topbar { height: auto; 
+    padding-block: .8rem; 
+    flex-wrap: wrap; gap: .8rem; }
+  .topbar-actions { width: 100%; }
+  .search-field { flex: 1; width: auto; }
+  .add-event-button span { display: none; }
+  .dashboard { padding: 1rem; }
+  .calendar-panel { padding: 1rem; }
+  .calendar-toolbar { align-items: flex-start; }
+  .calendar-controls { gap: .28rem; }
+  .calendar-day { min-height: 63px; padding: .38rem; }
+  .weekday { padding: .55rem .1rem; font-size: .55rem; }
+  .event-chip, .holiday-chip { right: .2rem; left: .2rem; padding: .16rem .2rem; font-size: .43rem; }
+  .event-chip { bottom: .25rem; }
+  .event-chip.stacked { bottom: 1.3rem; }
+  .event-chip.more-events { right: .2rem; bottom: .22rem; left: auto; }
+  .holiday-chip { top: 2.2rem; }
+  .sidebar { grid-template-columns: 1fr; }
+  .announcement-card { grid-column: auto; }
+  .today-card { grid-row: auto; } }
+@media (max-width: 520px) { 
+  .form-grid { grid-template-columns: 1fr; }
+  .modal-actions { align-items: stretch; flex-direction: column-reverse; }
+  .modal-actions-end { justify-content: stretch; }
+  .modal-actions-end button { flex: 1; }
+  .danger-button { width: 100%; } }
+@media (max-width: 380px) { 
+  .calendar-toolbar { gap: .65rem; flex-direction: column; }
+  .calendar-controls { align-self: flex-end; }
+  .calendar-day { min-height: 58px; }
+  .topbar-actions { gap: .45rem; }
+  .primary-button { padding-inline: .78rem; } }
