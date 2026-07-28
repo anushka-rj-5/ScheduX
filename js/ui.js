@@ -9,10 +9,10 @@ export function initializeSidebar({ onCategoryChange = () => {}, onEventClick = 
   const todayEvents = document.querySelector('[data-today-events]');
   const upcomingEvents = document.querySelector('[data-upcoming-events]');
   const categoryFilters = document.querySelector('[data-category-filters]');
-  const announcements = document.querySelector('[data-announcements]');
+  const eventDetails = document.querySelector('[data-event-details]');
   const selectedCategories = new Set();
 
-  if (!todayDate || !todayEvents || !upcomingEvents || !categoryFilters || !announcements) {
+  if (!todayDate || !todayEvents || !upcomingEvents || !categoryFilters || !eventDetails) {
     return null;
   }
 
@@ -46,32 +46,101 @@ export function initializeSidebar({ onCategoryChange = () => {}, onEventClick = 
 
   return {
     getSelectedCategories: () => [...selectedCategories],
+
     render({ allEvents, visibleEvents }) {
-      const today = new Date();
-      const todayKey = formatDateKey(today);
-      todayDate.textContent = dayFormatter.format(today);
-      renderEventList(todayEvents, visibleEvents.filter((event) => event.date === todayKey), 'No events scheduled today.');
-      renderEventList(upcomingEvents, getUpcomingEvents(visibleEvents, todayKey), 'No upcoming events yet.');
-      renderCategoryFilters(categoryFilters, allEvents, selectedCategories);
+        const today = new Date();
+        const todayKey = formatDateKey(today);
+
+        todayDate.textContent = dayFormatter.format(today);
+
+        renderEventList(
+            todayEvents,
+            visibleEvents.filter((event) => event.date === todayKey),
+            'No events scheduled today.'
+        );
+
+        renderEventList(
+            upcomingEvents,
+            getUpcomingEvents(visibleEvents),
+            'No upcoming events yet.'
+        );
+
+        renderCategoryFilters(categoryFilters, allEvents, selectedCategories);
     },
-    renderAnnouncements(posts) {
-      announcements.replaceChildren(...posts.map(createAnnouncement));
-    },
-    setAnnouncementsLoading(isLoading) {
-      if (isLoading) {
-        const skeleton = document.createElement('div');
-        skeleton.className = 'announcement-skeleton';
-        skeleton.setAttribute('aria-label', 'Loading announcements');
-        announcements.replaceChildren(skeleton);
-      }
-    },
-    setAnnouncementsError(message) {
-      const error = document.createElement('p');
-      error.className = 'empty-copy';
-      error.textContent = message;
-      announcements.replaceChildren(error);
-    },
-  };
+
+   showEventDetails(event) {
+
+    eventDetails.replaceChildren();
+
+    // Card
+    const card = document.createElement("div");
+    card.className = "event-detail-card";
+    
+    // Header
+    const header = document.createElement("div");
+    header.className = "event-detail-header";
+
+    const colorDot = document.createElement("span");
+    colorDot.className = "event-color";
+    colorDot.style.background = event.color;
+
+    const titleSection = document.createElement("div");
+
+    const title = document.createElement("h3");
+    title.className = "event-title";
+    title.textContent = event.title;
+
+    const category = document.createElement("span");
+    category.className = "event-category";
+    category.textContent = event.category;
+
+    titleSection.append(title, category);
+
+    header.append(colorDot, titleSection);
+    // Date Row
+
+    const dateRow = document.createElement("div");
+    dateRow.className = "event-info";
+
+    const dateIcon = document.createElement("i");
+    dateIcon.className = "fa-regular fa-calendar";
+
+    const dateText = document.createElement("span");
+    dateText.textContent = event.date;
+
+    dateRow.append(dateIcon, dateText);
+
+    
+    // Time Row
+    const timeRow = document.createElement("div");
+    timeRow.className = "event-info";
+
+    const timeIcon = document.createElement("i");
+    timeIcon.className = "fa-regular fa-clock";
+
+    const timeText = document.createElement("span");
+    timeText.textContent = event.time || "All Day";
+
+    timeRow.append(timeIcon, timeText);
+
+    
+    // Description
+    const description = document.createElement("div");
+    description.className = "event-description";
+    description.textContent =
+        event.description || "No description available.";
+
+    // Build Card
+    card.append(
+        header,
+        dateRow,
+        timeRow,
+        description
+    );
+
+    eventDetails.append(card);
+}
+ };
 }
 
 /** Displays a brief, non-blocking confirmation after user actions. */
@@ -157,10 +226,21 @@ function createAnnouncement(post) {
   return article;
 }
 
-function getUpcomingEvents(events, todayKey) {
-  return events
-    .filter((event) => event.date >= todayKey)
-    .sort((firstEvent, secondEvent) => `${firstEvent.date}${firstEvent.time}`.localeCompare(`${secondEvent.date}${secondEvent.time}`));
+function getUpcomingEvents(events) {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    const nextWeek = new Date(today);
+    nextWeek.setDate(today.getDate() + 7);
+
+    return events
+        .filter(event => {
+            const d = parseLocalDate(event.date);
+            return d >= today && d <= nextWeek;
+        })
+        .sort((a, b) =>
+            `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`)
+        );
 }
 
 function formatDateKey(date) {

@@ -23,6 +23,6 @@ function applyTheme(themeName) {
   const icon = themeButton?.querySelector('i');
 
   if (icon) {
-    icon.className = isDarkTheme ? 'fa-solid fa-sun' : 'fa-regular fa-moon';
+    icon.className = isDarkTheme ? 'fa-solid fa-moon' : 'fa-regular fa-sun';
   }
 }

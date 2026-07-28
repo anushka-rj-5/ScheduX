@@ -72,10 +72,6 @@
 
           <div class="calendar-body">
             <div class="calendar-grid" data-calendar-grid aria-label="Calendar"></div>
-            <div class="calendar-loading" data-calendar-loading role="status" hidden>
-              <span class="loading-spinner" aria-hidden="true"></span>
-              <span>Loading public holidays…</span>
-            </div>
           </div>
           <p class="calendar-error" data-calendar-error role="alert" hidden></p>
           <p class="calendar-attribution">Public holiday data by <a href="https://calendarific.com/" target="_blank" rel="noreferrer">Calendarific</a></p>
@@ -88,7 +84,7 @@
           </section>
 
           <section class="sidebar-card">
-            <div class="card-heading"><div><h2>Upcoming</h2><p>Stay ahead of your week</p></div></div>
+            <div class="card-heading"><div><h2>Upcoming</h2><p>Your plans for the coming week</p></div></div>
             <div data-upcoming-events></div>
           </section>
 
@@ -97,9 +93,17 @@
             <div class="filter-list" data-category-filters></div>
           </section>
 
-          <section class="sidebar-card announcement-card">
-            <div class="card-heading"><div><p class="eyebrow">Planning notes</p><h2>Announcements</h2></div><i class="fa-solid fa-sparkles" aria-hidden="true"></i></div>
-            <div data-announcements aria-live="polite"></div>
+          <section class="sidebar-card">
+            <div class="card-heading">
+    <div>
+        <h2>Event Details</h2>
+        <p>Click any event to view details</p>
+    </div>
+</div>
+
+<div data-event-details>
+    <p class="empty-copy">Select an event from the calendar.</p>
+</div>
           </section>
         </aside>
       </main>

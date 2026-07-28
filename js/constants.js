@@ -12,3 +12,8 @@ export const CATEGORY_COLORS = {
 };
 
 export const DEFAULT_EVENT_COLOR = CATEGORY_COLORS.Study;
+
+export const HOLIDAY_SETTINGS = {
+  cacheDurationMs: 1000 * 60 * 60 * 24 * 7,
+  countryCode: 'IN',
+};

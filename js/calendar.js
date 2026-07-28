@@ -16,14 +16,16 @@ export function initializeCalendar({
   getEvents = () => [],
   getHolidays = () => [],
   onEventClick = () => {},
+  onDateSelect = () => {},
   onMonthChange = () => {},
 } = {}) {
   const calendarGrid = document.querySelector('[data-calendar-grid]');
   const calendarHeading = document.querySelector('#calendar-heading');
   const calendarControls = document.querySelector('.calendar-controls');
-  
+  const holidayLoading = null;
+  const holidayError = document.querySelector('[data-calendar-error]');
 
-  if (!calendarGrid || !calendarHeading || !calendarControls || !holidayLoading || !holidayError) {
+  if (!calendarGrid || !calendarHeading || !calendarControls || !holidayError) {
     return;
   }
 
@@ -78,9 +80,22 @@ export function initializeCalendar({
 
     const selectedDate = parseCalendarDate(dayButton.dataset.calendarDate);
     const previousViewDate = formatMonthKey(state.viewDate);
+
     state.selectedDate = selectedDate;
-    state.viewDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+    state.viewDate = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth(),
+      1
+    );
+
     renderCalendar();
+
+    const clickedDate = dayButton.dataset.calendarDate;
+    const eventsForDate = getEvents().filter(event => event.date === clickedDate);
+
+    if (eventsForDate.length > 0) {
+      onEventClick(eventsForDate[0].id);
+    }
 
     if (formatMonthKey(state.viewDate) !== previousViewDate) {
       onMonthChange(new Date(state.viewDate));
@@ -97,9 +112,7 @@ export function initializeCalendar({
       holidayError.textContent = message;
       holidayError.hidden = !message;
     },
-    setHolidayLoading: (isLoading) => {
-      holidayLoading.hidden = !isLoading;
-    },
+    setHolidayLoading: () => {},
   };
 }
 

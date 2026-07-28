@@ -1,4 +1,6 @@
 import { initializeCalendar } from './calendar.js';
+import { apiService } from './api.js';
+import { HOLIDAY_SETTINGS } from './constants.js';
 import { eventService } from './events.js';
 import { initializeEventModal } from './modal.js';
 import { searchService } from './search.js';
@@ -6,22 +8,39 @@ import { storageService } from './storage.js';
 import { initializeTheme } from './theme.js';
 import { initializeSidebar, showToast } from './ui.js';
 
-document.addEventListener('DOMContentLoaded'), () => {
+document.addEventListener('DOMContentLoaded', () => {
   let events = storageService.loadEvents();
   let eventModal;
+  let holidays = [];
+  let holidayRequestId = 0;
   const searchInput = document.querySelector('[data-event-search]');
   const sidebar = initializeSidebar({
     onCategoryChange: () => refreshSchedule(),
-    onEventClick: (eventId) => openEventForEditing(eventId),
-  });
+    onEventClick: (eventId) => {
+        const event = events.find(e => e.id === eventId);
 
-  const calendar = initializeCalendar({
-  getEvents: () => getVisibleEvents(),
-  getHolidays: () => [],
-  onEventClick: (eventId) => openEventForEditing(eventId),
+        if (event) {
+            eventModal.openEdit(event);
+        }
+    },
 });
 
+  const calendar = initializeCalendar({
+    getEvents: () => getVisibleEvents(),
+    getHolidays: () => holidays,
+    onEventClick: (eventId) => {
+        const event = events.find(e => e.id === eventId);
+        if (event) {
+            sidebar.showEventDetails(event);
+        }
+    },
+    onDateSelect: (date) => showEventsForDate(date),
+    onMonthChange: (viewDate) => loadHolidays(viewDate),
+  });
+
   initializeTheme();
+  loadHolidays(calendar.getViewDate());
+
   eventModal = initializeEventModal({
     getSelectedDate: () => calendar?.getSelectedDate() ?? '',
     onDelete: (eventId) => {
@@ -55,14 +74,17 @@ document.addEventListener('DOMContentLoaded'), () => {
   document.querySelector('.add-event-button')?.addEventListener('click', () => {
     eventModal?.openCreate();
   });
-  searchInput?.addEventListener('input', () => refreshSchedule());
-
+  searchInput?.addEventListener("input", () => {
+    refreshSchedule();
+    calendar.render();
+});
   refreshSchedule();
+  loadAnnouncements();
 
-  
+  async function loadHolidays(viewDate) {
     const requestId = ++holidayRequestId;
     calendar.setHolidayError('');
-    calendar.setHolidayLoading(true);
+    // calendar.setHolidayLoading(true);
 
     try {
       const loadedHolidays = await apiService.getHolidays({
@@ -82,11 +104,50 @@ document.addEventListener('DOMContentLoaded'), () => {
       }
     } finally {
       if (requestId === holidayRequestId) {
-        calendar.setHolidayLoading(false);
+        //calendar.setHolidayLoading(false);
       }
     }
   }
 
- 
- 
+  function getVisibleEvents() {
+    return searchService.filterEvents(events, {
+        categories: sidebar?.getSelectedCategories() ?? [],
+        query: searchInput?.value ?? ""
+    });
+  }
 
+  function showEventsForDate(date) {
+
+    const event = getVisibleEvents().find(e => e.date === date);
+
+    if (event) {
+        sidebar.showEventDetails(event);
+    } else {
+        sidebar.clearEventDetails();
+    }
+  }
+
+  function refreshSchedule() {
+    const visibleEvents = getVisibleEvents();
+    sidebar?.render({ allEvents: events, visibleEvents });
+    calendar?.render();
+  }
+  function openEventForEditing(eventId) {
+    const event = events.find(e => e.id === eventId);
+
+    if (!event) return;
+
+    sidebar.showEventDetails(event);
+}
+
+  /*async function loadAnnouncements() {
+    sidebar?.setAnnouncementsLoading(true);
+
+    try {
+      const announcements = await apiService.getAnnouncements();
+      sidebar?.renderAnnouncements(announcements);
+    } catch (error) {
+      sidebar?.setAnnouncementsError(error.message);
+    }
+  }*/
+});

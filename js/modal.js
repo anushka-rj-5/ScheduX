@@ -1,4 +1,4 @@
-import { DEFAULT_EVENT_COLOR } from './constants.js';
+import { DEFAULT_EVENT_COLOR, CATEGORY_COLORS } from './constants.js';
 
 /** Controls the accessible form dialog used to create and edit events. */
 export function initializeEventModal({ getSelectedDate, onDelete, onSave }) {
@@ -42,8 +42,8 @@ export function initializeEventModal({ getSelectedDate, onDelete, onSave }) {
     activeEvent = null;
     form.reset();
     dateInput.value = getSelectedDate();
-    colorInput.value = DEFAULT_EVENT_COLOR;
     categoryInput.value = 'Study';
+    colorInput.value = DEFAULT_EVENT_COLOR;
     dialogTitle.textContent = 'Add event';
     deleteButton.hidden = true;
     openModal();
@@ -61,6 +61,10 @@ export function initializeEventModal({ getSelectedDate, onDelete, onSave }) {
     deleteButton.hidden = false;
     openModal();
   };
+
+  categoryInput.addEventListener('change', () => {
+  colorInput.value = CATEGORY_COLORS[categoryInput.value] || DEFAULT_EVENT_COLOR;
+});
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
