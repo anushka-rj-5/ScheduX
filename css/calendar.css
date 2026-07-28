@@ -77,22 +77,54 @@
   right: .35rem; bottom: .45rem; 
   left: auto; padding: 0; 
   color: #596076; background: #eff0f5; border-radius: 50%; }
-.holiday-chip { top: 2.45rem; color: #a94d29; background: #fff0e8; }
-.calendar-loading { position: absolute; 
-  z-index: 3; 
-  top: 50%; 
-  left: 50%; 
-  display: flex; 
-  align-items: center; gap: .55rem; padding: .65rem .8rem; 
-  color: #5e6477; background: rgba(255, 255, 255, .94); 
-  border: 1px solid #e1e3ed; border-radius: 9px; box-shadow: 0 8px 20px rgba(38, 44, 75, .12); 
-  font-size: .72rem; transform: translate(-50%, -50%); }
-.loading-spinner { width: 15px; 
-  height: 15px; 
-  border: 2px solid #dad7fb; 
-  border-top-color: var(--primary); 
-  border-radius: 50%; 
-  animation: spin .75s linear infinite; }
+.holiday-chip { position: relative; top: 2.45rem; color: #a94d29; background: #fff0e8; cursor: default; }
+.holiday-chip::after {
+  content: attr(data-full-name);
+  position: absolute;
+  z-index: 6;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  max-width: 180px;
+  padding: .4rem .6rem;
+  color: #fff;
+  background: #2d3248;
+  border-radius: 7px;
+  box-shadow: 0 10px 22px rgba(19, 23, 43, .28);
+  font-size: .64rem;
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: normal;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, 4px);
+  transition: opacity .15s ease, transform .15s ease, visibility .15s ease;
+}
+.holiday-chip::before {
+  content: '';
+  position: absolute;
+  z-index: 6;
+  bottom: calc(100% + 3px);
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: #2d3248;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 4px) rotate(45deg);
+  transition: opacity .15s ease, transform .15s ease, visibility .15s ease;
+}
+.holiday-chip:hover::after,
+.holiday-chip:hover::before,
+.holiday-chip:focus-visible::after,
+.holiday-chip:focus-visible::before,
+.holiday-chip.tooltip-visible::after,
+.holiday-chip.tooltip-visible::before {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
 .calendar-error { margin: .8rem 0 0; color: #a5533a; 
   font-size: .73rem; line-height: 1.45; }
 .calendar-attribution { margin: .8rem 0 0; 
@@ -100,4 +132,3 @@
   font-size: .63rem; 
   text-align: right; }
 .calendar-attribution a { color: inherit; }
-@keyframes spin { to { transform: rotate(360deg); } }

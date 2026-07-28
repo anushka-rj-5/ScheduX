@@ -3,7 +3,7 @@ import { CATEGORIES, CATEGORY_COLORS } from './constants.js';
 const dayFormatter = new Intl.DateTimeFormat('en-US', { day: 'numeric' });
 const monthFormatter = new Intl.DateTimeFormat('en-US', { month: 'short' });
 
-/** Renders dynamic sidebar content and exposes category filter state. */
+/* Renders dynamic sidebar content and exposes category filter state. */
 export function initializeSidebar({ onCategoryChange = () => {}, onEventClick = () => {} } = {}) {
   const todayDate = document.querySelector('[data-today-date]');
   const todayEvents = document.querySelector('[data-today-events]');
@@ -139,7 +139,15 @@ export function initializeSidebar({ onCategoryChange = () => {}, onEventClick = 
     );
 
     eventDetails.append(card);
-}
+},
+
+   clearEventDetails() {
+    eventDetails.replaceChildren();
+    const emptyState = document.createElement('p');
+    emptyState.className = 'empty-copy';
+    emptyState.textContent = 'Select an event from the calendar.';
+    eventDetails.append(emptyState);
+   },
  };
 }
 
@@ -212,18 +220,6 @@ function createSidebarEvent(event) {
   details.append(title, metadata);
   item.append(eventTime, details);
   return item;
-}
-
-function createAnnouncement(post) {
-  const article = document.createElement('article');
-  const title = document.createElement('strong');
-  const body = document.createElement('p');
-
-  article.className = 'announcement-item';
-  title.textContent = post.title;
-  body.textContent = post.body;
-  article.append(title, body);
-  return article;
 }
 
 function getUpcomingEvents(events) {

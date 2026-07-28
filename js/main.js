@@ -79,12 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
     calendar.render();
 });
   refreshSchedule();
-  loadAnnouncements();
-
   async function loadHolidays(viewDate) {
     const requestId = ++holidayRequestId;
     calendar.setHolidayError('');
-    // calendar.setHolidayLoading(true);
 
     try {
       const loadedHolidays = await apiService.getHolidays({
@@ -101,10 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
         holidays = [];
         calendar.render();
         calendar.setHolidayError(error.message);
-      }
-    } finally {
-      if (requestId === holidayRequestId) {
-        //calendar.setHolidayLoading(false);
       }
     }
   }
@@ -132,22 +125,4 @@ document.addEventListener('DOMContentLoaded', () => {
     sidebar?.render({ allEvents: events, visibleEvents });
     calendar?.render();
   }
-  function openEventForEditing(eventId) {
-    const event = events.find(e => e.id === eventId);
-
-    if (!event) return;
-
-    sidebar.showEventDetails(event);
-}
-
-  /*async function loadAnnouncements() {
-    sidebar?.setAnnouncementsLoading(true);
-
-    try {
-      const announcements = await apiService.getAnnouncements();
-      sidebar?.renderAnnouncements(announcements);
-    } catch (error) {
-      sidebar?.setAnnouncementsError(error.message);
-    }
-  }*/
 });

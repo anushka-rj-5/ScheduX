@@ -2,7 +2,6 @@ import { HOLIDAY_SETTINGS } from './constants.js';
 import { storageService } from './storage.js';
 
 const CALENDARIFIC_URL = 'https://calendarific.com/api/v2/holidays';
-const JSON_PLACEHOLDER_POSTS_URL = 'https://jsonplaceholder.typicode.com/posts?_limit=2';
 
 /** Loads a country-year holiday set from Calendarific and caches successful responses. */
 export const apiService = {
@@ -50,30 +49,6 @@ export const apiService = {
       return normalizedHolidays;
     } catch {
       throw new Error('Holiday data is unavailable right now.');
-    }
-  },
-
-  async getAnnouncements() {
-    try {
-      const response = await fetch(JSON_PLACEHOLDER_POSTS_URL);
-
-      if (!response.ok) {
-        throw new Error('Announcements are unavailable right now.');
-      }
-
-      const posts = await response.json();
-
-      if (!Array.isArray(posts)) {
-        throw new Error('Announcements are unavailable right now.');
-      }
-
-      return posts.map((post) => ({
-        body: post.body,
-        id: post.id,
-        title: post.title,
-      }));
-    } catch {
-      throw new Error('Announcements are unavailable right now.');
     }
   },
 };

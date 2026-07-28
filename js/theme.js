@@ -1,6 +1,6 @@
 import { storageService } from './storage.js';
 
-/** Applies and persists the user's preferred color theme. */
+/* Applies user's preferred color theme. */
 export function initializeTheme() {
   const themeButton = document.querySelector('[data-theme-toggle]');
   const storedTheme = storageService.loadPreference('theme', 'light');

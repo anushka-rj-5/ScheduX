@@ -22,7 +22,6 @@ export function initializeCalendar({
   const calendarGrid = document.querySelector('[data-calendar-grid]');
   const calendarHeading = document.querySelector('#calendar-heading');
   const calendarControls = document.querySelector('.calendar-controls');
-  const holidayLoading = null;
   const holidayError = document.querySelector('[data-calendar-error]');
 
   if (!calendarGrid || !calendarHeading || !calendarControls || !holidayError) {
@@ -65,6 +64,19 @@ export function initializeCalendar({
   });
 
   calendarGrid.addEventListener('click', (event) => {
+    const holidayChip = event.target.closest('.holiday-chip');
+
+    if (holidayChip) {
+      const wasVisible = holidayChip.classList.contains('tooltip-visible');
+      closeAllHolidayTooltips();
+      if (!wasVisible) {
+        holidayChip.classList.add('tooltip-visible');
+      }
+      return;
+    }
+
+    closeAllHolidayTooltips();
+
     const eventChip = event.target.closest('[data-event-id]');
 
     if (eventChip) {
@@ -89,16 +101,45 @@ export function initializeCalendar({
     );
 
     renderCalendar();
-
-    const clickedDate = dayButton.dataset.calendarDate;
-    const eventsForDate = getEvents().filter(event => event.date === clickedDate);
-
-    if (eventsForDate.length > 0) {
-      onEventClick(eventsForDate[0].id);
-    }
+    onDateSelect(dayButton.dataset.calendarDate);
 
     if (formatMonthKey(state.viewDate) !== previousViewDate) {
       onMonthChange(new Date(state.viewDate));
+    }
+  });
+
+  function closeAllHolidayTooltips() {
+    calendarGrid
+      .querySelectorAll('.holiday-chip.tooltip-visible')
+      .forEach((chip) => chip.classList.remove('tooltip-visible'));
+  }
+
+  calendarGrid.addEventListener('focusin', (event) => {
+    const holidayChip = event.target.closest('.holiday-chip');
+
+    if (holidayChip) {
+      closeAllHolidayTooltips();
+      holidayChip.classList.add('tooltip-visible');
+    }
+  });
+
+  calendarGrid.addEventListener('focusout', (event) => {
+    const holidayChip = event.target.closest('.holiday-chip');
+
+    if (holidayChip) {
+      holidayChip.classList.remove('tooltip-visible');
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!calendarGrid.contains(event.target)) {
+      closeAllHolidayTooltips();
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeAllHolidayTooltips();
     }
   });
 
@@ -112,7 +153,6 @@ export function initializeCalendar({
       holidayError.textContent = message;
       holidayError.hidden = !message;
     },
-    setHolidayLoading: () => {},
   };
 }
 
@@ -167,6 +207,11 @@ function createDayButton(date, state, events, holidays) {
     const holidayChip = document.createElement('span');
     holidayChip.className = 'holiday-chip';
     holidayChip.textContent = holidaysForDate[0].name;
+    holidayChip.dataset.fullName = holidaysForDate
+      .map((holiday) => holiday.name)
+      .join(' · ');
+    holidayChip.setAttribute('tabindex', '0');
+    holidayChip.setAttribute('aria-label', holidayChip.dataset.fullName);
     dayButton.append(holidayChip);
   }
 
