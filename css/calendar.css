@@ -1,130 +1,272 @@
-.calendar-body { position: relative; }
+/* ── Calendar Header Title Selectors ─────────── */
+.calendar-title-nav {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.picker-trigger-wrapper {
+  position: relative;
+}
+
+.calendar-picker-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .35rem .7rem;
+  color: var(--text);
+  background: rgba(245, 246, 250, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-family: Poppins, sans-serif;
+  font-size: clamp(1.1rem, 1.8vw, 1.45rem);
+  font-weight: 700;
+  letter-spacing: -.03em;
+  cursor: pointer;
+  transition: .18s ease;
+}
+
+.calendar-picker-btn:hover {
+  color: var(--primary);
+  background: #f4f3ff;
+  border-color: #dedbff;
+}
+
+.calendar-picker-btn i {
+  font-size: .75rem;
+  color: var(--muted);
+  transition: transform .2s ease;
+}
+
+.calendar-picker-btn[aria-expanded="true"] i {
+  transform: rotate(180deg);
+  color: var(--primary);
+}
+
+:root[data-theme="dark"] .calendar-picker-btn {
+  background: rgba(41, 45, 64, 0.85);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .calendar-picker-btn:hover {
+  background: #33364c;
+  color: #c4bfff;
+}
+
+/* ── Page-Turn 3D & Direct Fade Animations ────── */
+.calendar-body {
+  position: relative;
+  perspective: 1200px;
+  overflow: hidden;
+}
+
 .calendar-grid { 
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
   border-top: 1px solid var(--border); 
   border-left: 1px solid var(--border); 
-  overflow: hidden; border-radius: 11px; }
-.weekday { padding: .75rem .35rem;
-  color: #9298aa; 
-  background: #fbfbfd; 
-  border-right: 1px solid var(--border); 
-  border-bottom: 1px solid var(--border); 
-  font-size: .65rem;
-  font-weight: 700; 
-  text-align: center; 
-  text-transform: uppercase; }
-.calendar-day { 
-  position: relative;
-  display: flex; 
-  min-height: clamp(76px, 9.6vw, 111px); 
-  padding: .58rem .6rem; 
-  align-items: flex-start; 
-  color: #575e72; 
-  background: #fff; 
-  border: 0; 
-  border-right: 1px solid var(--border); 
-  border-bottom: 1px solid var(--border); 
-  text-align: left; transition: .18s ease; }
-.calendar-day:hover { 
-  z-index: 1; 
-  background: #fafaff; 
-  box-shadow: inset 0 0 0 1.5px #c9c5f5; }
-.calendar-day:focus-visible { z-index: 2; 
-  outline-offset: -3px; }
-.calendar-day time { 
-  display: grid; 
-  width: 28px; 
-  height: 28px; 
-  place-items: center; 
-  border-radius: 50%; 
-  font-size: .88rem; 
-  font-weight: 700; }
-.calendar-day.muted { 
-  color: #c5c8d3; 
-  background: #fcfcfd; }
-.calendar-day.current time { 
-  color: #fff; 
-  background: var(--primary); 
-  box-shadow: 0 3px 7px rgba(97,86,217,.25); }
-.calendar-day.holiday:not(.current) time { color: #c65a30;
-   background: #fff0e8; }
-.calendar-day.selected { 
-  background: #faf9ff; 
-  box-shadow: inset 0 0 0 1.5px #aaa3f5; }
-.event-chip, 
-.holiday-chip { position: absolute; 
-  right: .3rem; 
-  left: .3rem; 
-  overflow: hidden; 
-  padding: .27rem .38rem; 
-  border-radius: 5px; 
-  font-size: .55rem; 
-  font-weight: 700; 
-  text-overflow: ellipsis; 
-  white-space: nowrap; }
-.event-chip { 
-  bottom: .4rem; 
-  color: #fff; 
-  background: var(--event-color, #5e9bea); }
-.event-chip.stacked { 
-  bottom: 1.8rem; }
-.event-chip.more-events { 
-  display: grid; 
-  width: 18px; 
-  height: 18px; 
-  place-items: center; 
-  right: .35rem; bottom: .45rem; 
-  left: auto; padding: 0; 
-  color: #596076; background: #eff0f5; border-radius: 50%; }
-.holiday-chip { position: relative; top: 2.45rem; color: #a94d29; background: #fff0e8; cursor: default; }
-.holiday-chip::after {
-  content: attr(data-full-name);
+  border-radius: 11px;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.calendar-grid-animating-exit {
   position: absolute;
-  z-index: 6;
-  bottom: calc(100% + 8px);
-  left: 50%;
-  max-width: 180px;
-  padding: .4rem .6rem;
-  color: #fff;
-  background: #2d3248;
-  border-radius: 7px;
-  box-shadow: 0 10px 22px rgba(19, 23, 43, .28);
-  font-size: .64rem;
-  font-weight: 600;
-  line-height: 1.35;
-  white-space: normal;
-  text-align: center;
-  opacity: 0;
-  visibility: hidden;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
   pointer-events: none;
-  transform: translate(-50%, 4px);
-  transition: opacity .15s ease, transform .15s ease, visibility .15s ease;
+  animation-duration: 450ms;
+  animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+  animation-fill-mode: forwards;
 }
-.holiday-chip::before {
-  content: '';
-  position: absolute;
-  z-index: 6;
-  bottom: calc(100% + 3px);
-  left: 50%;
-  width: 8px;
-  height: 8px;
-  background: #2d3248;
-  opacity: 0;
-  visibility: hidden;
-  transform: translate(-50%, 4px) rotate(45deg);
-  transition: opacity .15s ease, transform .15s ease, visibility .15s ease;
+
+.calendar-grid-animating-enter {
+  animation-duration: 450ms;
+  animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+  animation-fill-mode: forwards;
 }
-.holiday-chip:hover::after,
-.holiday-chip:hover::before,
-.holiday-chip:focus-visible::after,
-.holiday-chip:focus-visible::before,
-.holiday-chip.tooltip-visible::after,
-.holiday-chip.tooltip-visible::before {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, 0);
+
+/* Next month: turn left */
+@keyframes pageTurnExitLeft {
+  0% { transform: rotateY(0deg) translateX(0); opacity: 1; transform-origin: left center; }
+  100% { transform: rotateY(-20deg) translateX(-100%); opacity: 0; transform-origin: left center; }
 }
+
+@keyframes pageTurnEnterRight {
+  0% { transform: rotateY(20deg) translateX(100%); opacity: 0; transform-origin: right center; }
+  100% { transform: rotateY(0deg) translateX(0); opacity: 1; transform-origin: right center; }
+}
+
+/* Previous month: turn right */
+@keyframes pageTurnExitRight {
+  0% { transform: rotateY(0deg) translateX(0); opacity: 1; transform-origin: right center; }
+  100% { transform: rotateY(20deg) translateX(100%); opacity: 0; transform-origin: right center; }
+}
+
+@keyframes pageTurnEnterLeft {
+  0% { transform: rotateY(-20deg) translateX(-100%); opacity: 0; transform-origin: left center; }
+  100% { transform: rotateY(0deg) translateX(0); opacity: 1; transform-origin: left center; }
+}
+
+/* Direct navigation (Dropdowns / Event jumps): Quick Fade */
+.calendar-grid-fade {
+  animation: calendarQuickFade 250ms ease-out forwards;
+}
+
+@keyframes calendarQuickFade {
+  0% { opacity: 0.3; transform: scale(0.985); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.weekday {
+  padding: .75rem .35rem;
+  color: #9298aa;
+  background: rgba(251, 251, 253, 0.85);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  font-size: .65rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.calendar-day {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: .3rem;
+  min-height: clamp(76px, 9.6vw, 111px);
+  height: auto;
+  padding: .5rem .5rem;
+  color: #575e72;
+  background: rgba(255, 255, 255, 0.88);
+  border: 0;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  transition: .18s ease;
+}
+
+.calendar-day:hover {
+  z-index: 1;
+  background: rgba(250, 250, 255, 0.95);
+  box-shadow: inset 0 0 0 1.5px #c9c5f5;
+}
+
+.calendar-day:focus-visible {
+  z-index: 2;
+  outline-offset: -3px;
+}
+
+.calendar-day time {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 50%;
+  font-size: .88rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.calendar-day.muted {
+  color: #c5c8d3;
+  background: #fcfcfd;
+}
+
+.calendar-day.current time {
+  color: #fff;
+  background: var(--primary);
+  box-shadow: 0 3px 7px rgba(97, 86, 217, .25);
+}
+
+.calendar-day.holiday:not(.current) time {
+  color: #c65a30;
+  background: #fff0e8;
+}
+
+.calendar-day.selected {
+  background: #faf9ff;
+  box-shadow: inset 0 0 0 1.5px #aaa3f5;
+}
+
+/* ── Holiday Chips Container & Stacked Chips ──── */
+.holiday-chips-container {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  width: 100%;
+  margin-top: .15rem;
+  z-index: 2;
+}
+
+.holiday-chip {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  padding: .28rem .45rem;
+  color: #a94d29;
+  background: #fff0e8;
+  border-radius: 5px;
+  font-size: .6rem;
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  text-overflow: clip;
+  overflow: visible;
+  height: auto;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background .15s ease;
+}
+
+.holiday-chip:hover {
+  background: #fce5d8;
+}
+
+/* ── User Event Chips Container & Chips ───────── */
+.events-container {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  width: 100%;
+  margin-top: auto;
+  z-index: 3;
+}
+
+.event-chip {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: .25rem .38rem;
+  color: #fff;
+  background: var(--event-color, #5e9bea);
+  border-radius: 5px;
+  font-size: .55rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-chip.more-events {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  align-self: flex-end;
+  padding: 0;
+  color: #596076;
+  background: #eff0f5;
+  border-radius: 50%;
+}
+
 .calendar-error { margin: .8rem 0 0; color: #a5533a; 
   font-size: .73rem; line-height: 1.45; }
 .calendar-attribution { margin: .8rem 0 0; 

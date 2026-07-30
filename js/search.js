@@ -1,21 +1,20 @@
+import { CATEGORIES } from './constants.js';
+
 export const searchService = {
-    filterEvents(events, { categories = [], query = "" } = {}) {
+  filterEvents(events, { categories, query = "" } = {}) {
+    query = query.trim().toLowerCase();
+    const activeCategories = categories !== undefined ? categories : CATEGORIES;
 
-        query = query.trim().toLowerCase();
+    return events.filter(event => {
+      const matchesCategory = activeCategories.length > 0 && activeCategories.includes(event.category);
 
-        return events.filter(event => {
+      const matchesSearch =
+        query === "" ||
+        event.title.toLowerCase().includes(query) ||
+        (event.description || "").toLowerCase().includes(query) ||
+        event.category.toLowerCase().includes(query);
 
-            const matchesCategory =
-                categories.length === 0 ||
-                categories.includes(event.category);
-
-            const matchesSearch =
-                query === "" ||
-                event.title.toLowerCase().includes(query) ||
-                (event.description || "").toLowerCase().includes(query) ||
-                event.category.toLowerCase().includes(query);
-
-            return matchesCategory && matchesSearch;
-        });
-    }
+      return matchesCategory && matchesSearch;
+    });
+  }
 };

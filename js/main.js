@@ -6,7 +6,7 @@ import { initializeEventModal } from './modal.js';
 import { searchService } from './search.js';
 import { storageService } from './storage.js';
 import { initializeTheme } from './theme.js';
-import { initializeSidebar, showToast } from './ui.js';
+import { initializeSidebar, showToast, showEventDetailPopup } from './ui.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   let events = storageService.loadEvents();
@@ -14,26 +14,56 @@ document.addEventListener('DOMContentLoaded', () => {
   let holidays = [];
   let holidayRequestId = 0;
   const searchInput = document.querySelector('[data-event-search]');
+
+  const handleSelectEvent = (event) => {
+    if (!event) return;
+    calendar?.navigateToDate(event.date);
+    sidebar?.showEventDetails(event);
+    showEventDetailPopup(event, {
+      onEdit: (evt) => {
+        eventModal.openEdit(evt);
+      },
+      onDelete: (id) => {
+        return deleteEvent(id);
+      },
+    });
+  };
+
   const sidebar = initializeSidebar({
     onCategoryChange: () => refreshSchedule(),
     onEventClick: (eventId) => {
-        const event = events.find(e => e.id === eventId);
-
-        if (event) {
-            eventModal.openEdit(event);
-        }
+      const event = events.find((e) => e.id === eventId);
+      if (event) {
+        handleSelectEvent(event);
+      }
     },
-});
+  });
 
   const calendar = initializeCalendar({
     getEvents: () => getVisibleEvents(),
     getHolidays: () => holidays,
+
+    // Left-click / tap on a user event → open detail popup with Edit & Delete
     onEventClick: (eventId) => {
-        const event = events.find(e => e.id === eventId);
-        if (event) {
-            sidebar.showEventDetails(event);
-        }
+      const event = events.find((e) => e.id === eventId);
+      if (event) {
+        handleSelectEvent(event);
+      }
     },
+
+    // Context menu / long-press → Edit shortcut
+    onEventEdit: (eventId) => {
+      const event = events.find((e) => e.id === eventId);
+      if (event) {
+        eventModal.openEdit(event);
+      }
+    },
+
+    // Context menu / long-press → Delete shortcut
+    onEventDelete: (eventId) => {
+      deleteEvent(eventId);
+    },
+
     onDateSelect: (date) => showEventsForDate(date),
     onMonthChange: (viewDate) => loadHolidays(viewDate),
   });
@@ -44,10 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
   eventModal = initializeEventModal({
     getSelectedDate: () => calendar?.getSelectedDate() ?? '',
     onDelete: (eventId) => {
-      events = events.filter((event) => event.id !== eventId);
-      storageService.saveEvents(events);
-      refreshSchedule();
-      showToast('Event deleted.');
+      deleteEvent(eventId);
     },
     onSave: (draft, eventId) => {
       const validationMessage = eventService.validateEvent(draft, events, eventId);
@@ -77,8 +104,9 @@ document.addEventListener('DOMContentLoaded', () => {
   searchInput?.addEventListener("input", () => {
     refreshSchedule();
     calendar.render();
-});
+  });
   refreshSchedule();
+
   async function loadHolidays(viewDate) {
     const requestId = ++holidayRequestId;
     calendar.setHolidayError('');
@@ -100,6 +128,22 @@ document.addEventListener('DOMContentLoaded', () => {
         calendar.setHolidayError(error.message);
       }
     }
+  }
+
+  function deleteEvent(eventId) {
+    const targetEvent = events.find((e) => e.id === eventId);
+    if (!targetEvent) return false;
+
+    if (!window.confirm(`Delete "${targetEvent.title}"?`)) {
+      return false;
+    }
+
+    events = events.filter((event) => event.id !== eventId);
+    storageService.saveEvents(events);
+    refreshSchedule();
+    sidebar?.clearEventDetails();
+    showToast('Event deleted.');
+    return true;
   }
 
   function getVisibleEvents() {

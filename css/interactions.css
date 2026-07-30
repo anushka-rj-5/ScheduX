@@ -1,0 +1,517 @@
+/* ───────────────────────────────────────────────
+   interactions.css — popovers, popups, tooltips,
+   context menus for calendar items
+   ─────────────────────────────────────────────── */
+
+/* ── Holiday Popover ─────────────────────────── */
+.holiday-popover {
+  position: fixed;
+  z-index: 50;
+  width: min(320px, calc(100vw - 2rem));
+  padding: 1.1rem 1.2rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(19, 23, 43, .18);
+  animation: popover-in .18s ease-out;
+  pointer-events: auto;
+}
+
+.holiday-popover-name {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: 0 0 .55rem;
+  font-family: Poppins, sans-serif;
+  font-size: .95rem;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  line-height: 1.3;
+}
+
+.holiday-popover-name i {
+  color: #c65a30;
+  font-size: .85rem;
+  flex-shrink: 0;
+}
+
+.holiday-popover-date {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  margin-bottom: .65rem;
+  padding: .3rem .6rem;
+  color: #a94d29;
+  background: #fff0e8;
+  border-radius: 6px;
+  font-size: .7rem;
+  font-weight: 600;
+}
+
+.holiday-popover-date i {
+  font-size: .65rem;
+}
+
+.holiday-popover-desc {
+  margin: 0;
+  padding-top: .55rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: .78rem;
+  line-height: 1.55;
+}
+
+.holiday-popover-close {
+  position: absolute;
+  top: .6rem;
+  right: .6rem;
+  display: none;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  font-size: .7rem;
+  cursor: pointer;
+  transition: .15s ease;
+}
+
+.holiday-popover-close:hover {
+  color: var(--text);
+  background: #f5f6fa;
+}
+
+/* ── Event Preview Tooltip (desktop hover) ───── */
+.event-preview-tooltip {
+  position: fixed;
+  z-index: 48;
+  padding: .6rem .75rem;
+  color: #fff;
+  background: #2d3248;
+  border-radius: 9px;
+  box-shadow: 0 10px 24px rgba(19, 23, 43, .28);
+  animation: popover-in .14s ease-out;
+  pointer-events: none;
+  max-width: 220px;
+}
+
+.event-preview-tooltip-title {
+  display: block;
+  margin: 0 0 .2rem;
+  font-size: .76rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.event-preview-tooltip-meta {
+  display: block;
+  color: #b4b9cc;
+  font-size: .65rem;
+  white-space: nowrap;
+}
+
+/* ── Event Detail Popup ──────────────────────── */
+.event-detail-popup-backdrop {
+  position: fixed;
+  z-index: 40;
+  inset: 0;
+  background: rgba(24, 28, 45, .38);
+  animation: backdrop-in .15s ease-out;
+}
+
+.event-detail-popup {
+  position: fixed;
+  z-index: 41;
+  top: 50%;
+  left: 50%;
+  width: min(420px, calc(100% - 2rem));
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  padding: 1.4rem 1.5rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 25px 60px rgba(19, 23, 43, .22);
+  transform: translate(-50%, -50%);
+  animation: popup-in .2s ease-out;
+}
+
+.event-detail-popup-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .8rem;
+  margin-bottom: 1.1rem;
+}
+
+.event-detail-popup-header-left {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  min-width: 0;
+}
+
+.event-detail-popup-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.event-detail-popup-title {
+  margin: 0;
+  font-family: Poppins, sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  line-height: 1.3;
+}
+
+.event-detail-popup-close {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  flex-shrink: 0;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: .8rem;
+  cursor: pointer;
+  transition: .15s ease;
+}
+
+.event-detail-popup-close:hover {
+  color: var(--text);
+  background: #f5f6fa;
+}
+
+.event-detail-popup-category {
+  display: inline-block;
+  margin-bottom: .9rem;
+  padding: .25rem .6rem;
+  color: var(--primary);
+  background: #ece9ff;
+  border-radius: 20px;
+  font-size: .7rem;
+  font-weight: 600;
+}
+
+.event-detail-popup-row {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  margin-bottom: .6rem;
+  color: var(--muted);
+  font-size: .82rem;
+}
+
+.event-detail-popup-row i {
+  width: 18px;
+  color: var(--primary);
+  text-align: center;
+  font-size: .8rem;
+}
+
+.event-detail-popup-desc {
+  margin: .7rem 0 0;
+  padding: .85rem 1rem;
+  color: var(--text);
+  background: #f5f6fb;
+  border-radius: 10px;
+  font-size: .8rem;
+  line-height: 1.6;
+}
+
+.event-detail-popup-actions {
+  display: flex;
+  gap: .55rem;
+  margin-top: 1.15rem;
+}
+
+.event-detail-popup-actions button {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  padding: .62rem .8rem;
+  border-radius: 9px;
+  font-size: .78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: .15s ease;
+}
+
+.event-detail-popup-edit {
+  color: var(--primary);
+  background: #f4f3ff;
+  border: 1px solid #dedbff;
+}
+
+.event-detail-popup-edit:hover {
+  background: #ebe9ff;
+}
+
+.event-detail-popup-delete {
+  color: #b44e52;
+  background: #fff0f0;
+  border: 1px solid #ffd9d9;
+}
+
+.event-detail-popup-delete:hover {
+  background: #ffe4e4;
+}
+
+/* ── Context Menu ────────────────────────────── */
+.context-menu {
+  position: fixed;
+  z-index: 55;
+  min-width: 160px;
+  padding: .35rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 14px 36px rgba(19, 23, 43, .2);
+  animation: popover-in .12s ease-out;
+}
+
+.context-menu-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: .55rem;
+  padding: .55rem .7rem;
+  color: var(--text);
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  font-size: .78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: .12s ease;
+}
+
+.context-menu-item:hover {
+  background: #f4f3ff;
+  color: var(--primary);
+}
+
+.context-menu-item i {
+  width: 16px;
+  text-align: center;
+  font-size: .75rem;
+}
+
+.context-menu-item--danger {
+  color: #b44e52;
+}
+
+.context-menu-item--danger:hover {
+  background: #fff0f0;
+  color: #a53f42;
+}
+
+/* ── Month & Year Picker Dropdowns ───────────── */
+.month-picker-dropdown,
+.year-picker-dropdown {
+  position: fixed;
+  z-index: 55;
+  padding: .75rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 16px 45px rgba(19, 23, 43, .22);
+  animation: popover-in .15s ease-out;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.month-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .4rem;
+  min-width: 240px;
+}
+
+.month-picker-btn,
+.year-picker-btn {
+  padding: .5rem .6rem;
+  color: var(--text);
+  background: rgba(245, 246, 250, 0.8);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: .75rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: .15s ease;
+}
+
+.month-picker-btn:hover,
+.year-picker-btn:hover {
+  color: var(--primary);
+  background: #f4f3ff;
+  border-color: #dedbff;
+}
+
+.month-picker-btn.active,
+.year-picker-btn.active {
+  color: #fff;
+  background: var(--primary);
+  border-color: var(--primary-dark);
+  box-shadow: 0 4px 10px rgba(97, 86, 217, .3);
+}
+
+.year-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-bottom: .65rem;
+  padding-bottom: .45rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.year-picker-decade-title {
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.year-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .4rem;
+  min-width: 210px;
+}
+
+/* ── Dark Theme ──────────────────────────────── */
+:root[data-theme="dark"] .holiday-popover {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .35);
+}
+
+:root[data-theme="dark"] .holiday-popover-date {
+  color: #e8a07a;
+  background: #3d2c22;
+}
+
+:root[data-theme="dark"] .holiday-popover-close:hover {
+  background: #33364c;
+}
+
+:root[data-theme="dark"] .event-preview-tooltip {
+  background: #1d2035;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .4);
+}
+
+:root[data-theme="dark"] .event-detail-popup {
+  box-shadow: 0 25px 60px rgba(0, 0, 0, .4);
+}
+
+:root[data-theme="dark"] .event-detail-popup-close:hover {
+  background: #33364c;
+}
+
+:root[data-theme="dark"] .event-detail-popup-category {
+  color: #c4bfff;
+  background: #363258;
+}
+
+:root[data-theme="dark"] .event-detail-popup-desc {
+  background: #34384d;
+}
+
+:root[data-theme="dark"] .event-detail-popup-edit {
+  color: #c4bfff;
+  background: #2e2b4a;
+  border-color: #4a4575;
+}
+
+:root[data-theme="dark"] .event-detail-popup-edit:hover {
+  background: #3a3660;
+}
+
+:root[data-theme="dark"] .event-detail-popup-delete {
+  color: #e88a8d;
+  background: #3d2628;
+  border-color: #5c3638;
+}
+
+:root[data-theme="dark"] .event-detail-popup-delete:hover {
+  background: #4a2e30;
+}
+
+:root[data-theme="dark"] .context-menu {
+  box-shadow: 0 14px 36px rgba(0, 0, 0, .4);
+}
+
+:root[data-theme="dark"] .context-menu-item:hover {
+  background: #33364c;
+}
+
+:root[data-theme="dark"] .context-menu-item--danger:hover {
+  background: #3d2628;
+  color: #e88a8d;
+}
+
+:root[data-theme="dark"] .month-picker-dropdown,
+:root[data-theme="dark"] .year-picker-dropdown {
+  box-shadow: 0 16px 45px rgba(0, 0, 0, .45);
+}
+
+:root[data-theme="dark"] .month-picker-btn,
+:root[data-theme="dark"] .year-picker-btn {
+  background: rgba(41, 45, 64, 0.85);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .month-picker-btn:hover,
+:root[data-theme="dark"] .year-picker-btn:hover {
+  background: #33364c;
+  color: #c4bfff;
+}
+
+/* ── Animations ──────────────────────────────── */
+@keyframes popover-in {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes popup-in {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(.96); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ── Mobile: show close button on holiday popover ── */
+@media (max-width: 850px) {
+  .holiday-popover-close {
+    display: grid;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .holiday-popover,
+  .event-preview-tooltip,
+  .event-detail-popup,
+  .event-detail-popup-backdrop,
+  .context-menu,
+  .month-picker-dropdown,
+  .year-picker-dropdown {
+    animation: none !important;
+  }
+}

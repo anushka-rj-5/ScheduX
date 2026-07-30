@@ -19,13 +19,21 @@
   .calendar-panel { padding: 1rem; }
   .calendar-toolbar { align-items: flex-start; }
   .calendar-controls { gap: .28rem; }
-  .calendar-day { min-height: 63px; padding: .38rem; }
+  .calendar-day { min-height: 65px; padding: .35rem; }
   .weekday { padding: .55rem .1rem; font-size: .55rem; }
-  .event-chip, .holiday-chip { right: .2rem; left: .2rem; padding: .16rem .2rem; font-size: .43rem; }
-  .event-chip { bottom: .25rem; }
-  .event-chip.stacked { bottom: 1.3rem; }
-  .event-chip.more-events { right: .2rem; bottom: .22rem; left: auto; }
-  .holiday-chip { top: 2.2rem; }
+  .event-chip { padding: .16rem .2rem; font-size: .43rem; }
+  .holiday-chip {
+    padding: .2rem .3rem;
+    font-size: .52rem;
+    line-height: 1.25;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    text-overflow: clip;
+    height: auto;
+    width: 100%;
+    max-width: 100%;
+  }
   .sidebar { grid-template-columns: 1fr; }
   .announcement-card { grid-column: auto; }
   .today-card { grid-row: auto; } }
